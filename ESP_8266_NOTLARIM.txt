@@ -1,0 +1,98 @@
+FiberHGW_ZT2T3R_2.4GHz
+HDA3dxXHfq
+
+ESP8266 NOTLARI
+https://docs.espressif.com/projects/esp-at/en/release-v2.2.0.0_esp8266/AT_Command_Examples/index.html
+
+https://docs.espressif.com/projects/esp-at/en/release-v2.2.0.0_esp8266/AT_Command_Examples/TCP-IP_AT_Examples.html#example-2-esp-as-a-tcp-server-in-multiple-connections
+
+
+1- ÇALIŞMASI VE AĞA BAĞLANABİLMESİ İÇİN CW MODE=3 OLMASI GEREKİYOR.
+2- SERVER KURABİLMEK İÇİN 2 NOKTA VAR. 
+İLKİ BAĞLANDIKTAN SONRA 10 SANİYE DELAY VERMELİSİN YA DA DAHA FAZLA.
+İKİNCİSİ CIPMUX=1 YAPMALISIN (YOKSA SERVER OLUŞTURURKEN HATA VERİR.)
+3- AT+CIPSERVER=1,80 BU KOMUT İLE BİR TCP SERVER OLUŞTURURSUN 80 PORTUNDA CIPMUX 1 DEĞİLSE BU ERROR VERİR.
+4- ESPNİN SERİ BAUDRATESİ 115200 BENİM KULLANDIĞIMDA. 
+
+PACKAGE SENDER İLE ÇALIŞAN KOD : 
+------------------------------------------------------------------------------------------------------------
+#include <SoftwareSerial.h>
+
+SoftwareSerial esp8266(2, 3); // RX, TX
+
+void setup() {
+  pinMode(LED_BUILTIN, OUTPUT); // Dahili LED için pin modunu ayarla
+  digitalWrite(LED_BUILTIN, LOW); // LED'i başlangıçta söndür
+
+  Serial.begin(9600);   
+  esp8266.begin(115200);  
+
+  Serial.println("ESP8266 ile haberleşme başladı");
+
+  // ESP8266'yı resetle ve WiFi ağına bağla (AT komutları)
+  esp8266.println("AT+RST");
+  delay(1000);
+  esp8266.println("AT+CWJAP=\"FiberHGW_ZT2T3R_2.4GHz\",\"HDA3dxXHfq\"");
+  delay(10000);
+
+  // Sunucu olarak çalışmaya başla, port 80 (AT komutları)
+  esp8266.println("AT+CIPMUX=1");
+  delay(3000);
+  esp8266.println("AT+CIPSERVER=1,80");
+  delay(3000);
+  Serial.write(esp8266.read());
+}
+
+void loop() {
+  // ESP8266'dan gelen veriyi kontrol et
+  while (esp8266.available()) {
+    String line = esp8266.readStringUntil('\n');
+    if (line.indexOf("LED=ON") >= 0) {
+      digitalWrite(LED_BUILTIN, HIGH); // LED'i yak
+    }
+    else if (line.indexOf("LED=OFF") >= 0) {
+      digitalWrite(LED_BUILTIN, LOW); // LED'i söndür
+    }
+  }
+}
+----------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+------------------------------------AT KOMUTLARI--------------------------------------------
+
+
+ESP8266 için AT komutları geniş bir yelpazeye sahiptir ve bu komutlar, modülün çeşitli işlevlerini kontrol etmek için kullanılır. İşte en yaygın kullanılan AT komutlarından bazıları:
+
+Temel AT Komutları:
+
+AT: Test AT komutudur. Cevap olarak "OK" döner.
+AT+RST: Modülü yeniden başlatır.
+AT+GMR: Firmware, SDK ve diğer sürüm bilgilerini gösterir.
+WiFi Ağ Ayarları:
+
+AT+CWMODE?: Geçerli WiFi modunu sorgular (istasyon, AP, veya her ikisi).
+AT+CWMODE=<mode>: WiFi modunu ayarlar.
+AT+CWJAP?: Geçerli bağlı ağın adını sorgular.
+AT+CWJAP=<ssid>,<pwd>: Bir WiFi ağına bağlanmak için kullanılır.
+AT+CWLAP: Yakındaki WiFi ağlarını listeler.
+TCP/IP Komutları:
+
+AT+CIPSTART: Bir TCP veya UDP bağlantısı başlatır. AT+CIPSTART=\"TCP\",\"example.com\",80".
+AT+CIPSEND: Bağlantı üzerinden veri göndermek için kullanılır.
+AT+CIPCLOSE: Aktif bağlantıyı kapatır.
+AT+CIFSR: Modülün IP adresini gösterir.
+AT+CIPMUX?: Çoklu bağlantı modunu sorgular.
+AT+CIPMUX=<mode>: Tekli (0) veya çoklu (1) bağlantı modunu ayarlar.
+AT+CIPSERVER=<mode>,<port>: Bir TCP sunucusu başlatır veya durdurur.
+Diğer Komutlar:
+
+AT+CIPMODE?: IP modunu sorgular.
+AT+CIPMODE=<mode>: Gönderme modunu ayarlar (normal veya passthrough).
+AT+CWQAP: WiFi ağından çıkış yapar.
+AT+CWSAP?: Erişim noktası (AP) ayarlarını sorgular.
+AT+CWSAP: Erişim noktası (AP) ayarlarını yapılandırır.
+AT+CWSAP=<ssid>,<pwd>,<chl>,<ecn>: Erişim noktası olarak ayarları yapılandırır.
+
+------------------------------------------------------------------------------------------------------------
+

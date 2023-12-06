@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="TCP_Server_ESP_Client.Views.AboutPage"
+             Title="About">
+
+    <StackLayout Padding="20">
+        <Label x:Name="serverinfo" Text="Server Status: " FontSize="Large" TextColor="DarkRed"/>
+        <Label x:Name="serverInfoLabel" Text="Server IP: " FontSize="Medium" TextColor="DarkRed"/>
+        <Label x:Name="clientInfoLabel" Text="Connected Device: " FontSize="Medium" TextColor="DarkRed"/>
+        <Button Text="Update Status" Clicked="Update_Status"/>
+    </StackLayout>
+</ContentPage>

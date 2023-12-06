@@ -1,0 +1,12 @@
+Traceback (most recent call last):
+  File "esp8266_flasher.py", line 81, in showDialog
+UnicodeEncodeError: 'ascii' codec can't encode character u'\u0131' in position 26: ordinal not in range(128)
+Traceback (most recent call last):
+  File "esp8266_flasher.py", line 81, in showDialog
+UnicodeEncodeError: 'ascii' codec can't encode character u'\u0131' in position 26: ordinal not in range(128)
+Traceback (most recent call last):
+  File "esp8266_flasher.py", line 81, in showDialog
+UnicodeEncodeError: 'ascii' codec can't encode character u'\u0131' in position 26: ordinal not in range(128)
+Traceback (most recent call last):
+  File "esp8266_flasher.py", line 81, in showDialog
+UnicodeEncodeError: 'ascii' codec can't encode character u'\u0131' in position 26: ordinal not in range(128)
